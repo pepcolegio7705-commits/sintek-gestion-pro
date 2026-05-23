@@ -1,0 +1,16 @@
+# Configuración de base de datos local y secretos
+config/database.php
+.env
+
+# Archivos subidos y reportes generados
+uploads/
+*.pdf
+*.docx
+*.doc
+
+# Logs
+*.log
+
+# Carpetas del IDE
+.vscode/
+.idea/

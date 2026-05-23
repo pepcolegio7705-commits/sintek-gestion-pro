@@ -1,0 +1,424 @@
+# 1. Seguridad Básica: Desactivar listado de directorios
+Options -Indexes
+
+# 2. Activar motor de reescritura
+RewriteEngine On
+
+# 3. Ocultar la extensión .php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+# ESTO ES LO MÁS IMPORTANTE PARA LOCALHOST
+RewriteBase /sintek-gestion-pro/
+
+# 4. Protección de carpetas críticas (Sintaxis compatible con .htaccess)
+# En lugar de <Directory>, usamos RewriteRules para denegar el acceso
+# RewriteRule ^(core|vistas|ajax|sql)/ - [F,L]
+
+# 5. Proteger archivos específicos por extensión
+<FilesMatch "\.(env|log|ini|json|sql)$">
+    Require all denied
+</FilesMatch>
+
+# 6. Proteger archivos específicos del núcleo
+<FilesMatch "^(conexion|config|funciones|seguridad)\.php$">
+    Require all denied
+</FilesMatch>
+# Rutas amigables para Alumnos
+RewriteRule ^alumnos/gestion$ modules/alumnos/alumnos_abm.php [L,QSA]
+RewriteRule ^alumnos/editar/([a-z0-9-]+)$ modules/alumnos/alumnos_abm.php?uuid=$1 [L,QSA]
+RewriteRule ^alumnos/eliminar/([a-z0-9-]+)$ modules/alumnos/alumnos_abm.php?action=delete&uuid=$1 [L,QSA]
+RewriteRule ^alumnos/historico$ modules/alumnos/alumnos_historico.php [L,QSA]
+
+# 2. Expediente PDF: alumnos/expediente/ID -> ajax/alumnos/imprimir_ficha.php?id=ID
+RewriteRule ^alumnos/expediente/([a-z0-9-]+)$ ajax/alumnos/alumno_expediente.php?uuid=$1 [L,QSA]
+
+# 3. Acción Toggle Estado: alumnos/toggle_estado -> ajax/alumnos/alumnos_actions_handler.php
+RewriteRule ^alumnos/toggle_estado$ ajax/alumnos/alumnos_actions_handler.php [L,QSA]
+# Cambiamos la regla para que sea coherente con el nombre del archivo
+RewriteRule ^alumnos/ficha/([a-z0-9-]+)$ ajax/alumnos/imprimir_ficha.php?uuid=$1 [L,QSA]
+RewriteRule ^alumnos/reporte/activos$ ajax/alumnos/reporte_activos_pdf.php [L,QSA]
+
+# Rutas para Documentación de Alumnos
+RewriteRule ^alumnos/analitico/([a-z0-9-]+)$ ajax/alumnos/generar_analitico.php?uuid=$1 [L,QSA]
+# Regla para Certificado de Materias Aprobadas
+RewriteRule ^alumnos/analitico-aprobado/([a-z0-9-]+)$ ajax/alumnos/generar_analitico_aprobado.php?uuid=$1 [L,QSA]
+# Regla para Acta de Egreso / Certificado de Título
+RewriteRule ^alumnos/acta-egreso/([a-z0-9-]+)$ ajax/alumnos/generar_acta_egreso.php?uuid=$1 [L,QSA]
+
+
+# Regla para el Analítico Histórico Provisorio
+RewriteRule ^alumnos/analitico/([a-z0-9-]+)$ ajax/alumnos/generar_analitico.php?uuid=$1 [L,QSA]
+
+# Gestión de Usuarios: usuarios/gestion -> modules/usuarios/usuarios_abm.php
+RewriteRule ^usuarios/gestion$ modules/usuarios/usuarios_abm.php [L,QSA]
+
+# --- MÓDULO MATERIAS (ESPACIOS) ---
+RewriteRule ^materias/gestion$ modules/espacios/espacios_abm.php [L,QSA]
+
+# Cambio de ID numérico a UUID (Acepta caracteres alfanuméricos y guiones)
+RewriteRule ^materias/editar/([a-z0-9-]+)$ modules/espacios/espacios_abm.php?action=edit&uuid=$1 [L,QSA]
+
+# Ruta amigable para el motor de la tabla
+RewriteRule ^materias/data_server$ ajax/espacios/server_processing_espacios.php [L,QSA]
+
+# Reportes con UUID
+RewriteRule ^materias/lista/([a-z0-9-]+)$ ajax/espacios/imprimir_lista_espacio.php?uuid=$1 [L,QSA]
+
+# --- MÓDULO CARRERAS ---
+RewriteRule ^carreras/gestion$ modules/carreras/carreras_abm.php [L,QSA]
+RewriteRule ^carreras/editar/([0-9]+)$ modules/carreras/carreras_abm.php?action=edit&id=$1 [L,QSA]
+RewriteRule ^carreras/data_server$ ajax/carreras/server_processing_carreras.php [L,QSA]
+RewriteRule ^carreras/get_alumnos$ ajax/carreras/get_alumnos_por_carrera.php [L,QSA]
+# Reporte Institucional: Listado de Alumnos por Carrera
+RewriteRule ^carreras/imprimir/([0-9]+)$ ajax/carreras/imprimir_lista_carrera.php?id_carrera=$1 [L,QSA]
+# Edición de Carreras
+RewriteRule ^carreras/editar/([0-9]+)$ modules/carreras/carreras_abm.php?action=edit&id=$1 [L,QSA]
+
+RewriteRule ^instituto/inscripcion$ modules/academico/inscripciones.php [L,QSA]
+# =================================================================
+# GESTIÓN DE PROFESORES - RUTAS BLINDADAS UUID
+# =================================================================
+
+# 1. Gestión principal y procesado de formularios
+RewriteRule ^profesores/gestion$ modules/profesores/profesores_abm.php [L,QSA]
+
+# 2. Edición de profesor (Mapea el hash al parámetro 'uuid')
+RewriteRule ^profesores/editar/([a-z0-9-]+)$ modules/profesores/profesores_abm.php?action=edit&uuid=$1 [L,QSA]
+
+# 3. Procesamiento DataTables (ServerSide)
+RewriteRule ^profesores/data_server$ ajax/profesores/serverside_processing_profesores.php [L,QSA]
+
+# 4. Obtener alumnos por carrera (Modal)
+RewriteRule ^profesores/get_alumnos$ ajax/profesores/get_alumnos_por_carrera.php [L,QSA]
+
+# 5. Reportes y Documentos
+RewriteRule ^profesores/legajo_pdf/([a-z0-9-]+)$ ajax/profesores/profesor_legajo_pdf.php?uuid=$1 [L,QSA]
+RewriteRule ^profesores/historial/([a-z0-9-]+)$ modules/profesores/historial_recibos.php?uuid=$1 [L,QSA]
+RewriteRule ^recibos/ver/([a-z0-9-]+)$ ajax/profesores/imprimir_recibo.php?uuid=$1 [L,QSA]
+# Certificación de Servicio para Profesores (Protegido por UUID)
+RewriteRule ^profesores/certificacion/([a-z0-9-]+)$ modules/profesores/certificacion_pdf.php?uuid=$1 [L,QSA]
+
+# Recibos y liquidaciones
+RewriteRule ^profesores/recibos/([a-z0-9-]+)$ ajax/profesores/obtener_recibos_agente.php?uuid=$1 [L,QSA]
+RewriteRule ^profesores/imprimir-recibo/([a-z0-9-]+)$ ajax/profesores/imprimir_recibo.php?uuid=$1 [L,QSA]
+
+# 6. Asignación de espacios curriculares
+RewriteRule ^profesores/asignar/([a-z0-9-]+)$ modules/profesores/profesores_asignar.php?uuid=$1 [L,QSA]
+RewriteRule ^profesores/guardarAsignacion/([a-z0-9-]+)$ ajax/profesores/guardar_asignacion.php?uuid=$1 [L,QSA]
+# Regla para generar el PDF de certificación
+RewriteRule ^profesores/certificacion/([a-z0-9-]+)$ ajax/profesores/certificacion_haberes_pdf.php?uuid=$1 [L,QSA]
+
+
+#Datos Institución
+RewriteRule ^academico/datos$ modules/academico/configuracion_abm.php [L,QSA]
+# --- MÓDULO PERSONAL STAFF (REGLAS BLINDADAS) ---
+
+# Vista Principal (Listado)
+RewriteRule ^staff/lista$ modules/staff/staff_lista.php [L,QSA]
+
+# Servidor de Datos (DataTable AJAX)
+RewriteRule ^staff/listado-data$ ajax/staff/servidor_staff.php [L,QSA]
+
+# Gestión / Alta de nuevo Staff
+RewriteRule ^staff/gestion$ modules/staff/staff_abm.php [L,QSA]
+
+# Edición de Staff existente (Protegido por UUID)
+RewriteRule ^staff/edit/([a-z0-9-]+)$ modules/staff/staff_abm.php?uuid=$1 [L,QSA]
+
+# Acciones (Baja/Desactivar) - Solo via AJAX/POST recomendado, pero aquí la ruta:
+RewriteRule ^staff/status/([a-z0-9-]+)$ ajax/staff/staff_acciones.php?uuid=$1 [L,QSA]
+
+# Generación de Legajo PDF Blindado con UUID
+RewriteRule ^staff/legajo-pdf/([a-z0-9-]+)$ modules/staff/staff_legajo_pdf.php?uuid=$1 [L,QSA]
+
+# Vista de Historial de Recibos Blindada
+RewriteRule ^staff/recibos/([a-z0-9-]+)$ modules/staff/staff_recibo_vista.php?uuid=$1 [L,QSA]
+
+# Certificación de Haberes (mapea id y fija el tipo=Staff)
+RewriteRule ^staff/certificacion/([0-9]+)$ modules/staff/certificacion_haberes_pdf.php?id=$1&tipo=Staff [L,QSA]
+
+# Procesador de datos para el DataTable de recibos
+RewriteRule ^staff/listado-recibos$ ajax/staff/obtener_recibos_agente.php [L,QSA]
+# Certificación de Servicio para Staff (Protegido por UUID)
+RewriteRule ^staff/certificacion/([a-z0-9-]+)$ modules/staff/certificacion_staff_pdf.php?uuid=$1 [L,QSA]
+RewriteRule ^areas/gestion$ modules/areas/areas_abm.php [L,QSA]
+RewriteRule ^areas/lista$ ajax/areas/server_processing_areas.php [L,QSA]
+
+#1. Ruta para EDITAR (Captura la palabra 'editar' y luego el ID)
+RewriteRule ^areas/editar/([a-z0-9-]+)$ modules/areas/areas_abm.php?uuid=$1 [L,QSA]
+
+# Regla para eliminar: Captura el UUID y fuerza action=delete
+RewriteRule ^areas/eliminar/([a-z0-9-]+)$ modules/areas/areas_abm.php?action=delete&uuid=$1 [L,QSA]
+
+# GESTIÓN DE CARRERAS
+RewriteRule ^institucion/carreras$ modules/carreras/carreras_lista.php [L,QSA]
+RewriteRule ^institucion/carrera/alta$ modules/carreras/carrera_abm.php [L,QSA]
+RewriteRule ^institucion/carrera/alta$ modules/carreras/carrera_abm.php [L,QSA]
+# Regla para Editar Carrera (Asegúrate de que la ruta al archivo sea correcta)
+RewriteRule ^carreras/editar/([a-z0-9-]+)$ modules/carreras/carreras_abm.php?action=edit&uuid=$1 [L,QSA]
+# Procesamiento Server-Side de Carreras
+RewriteRule ^carreras/data_server$ ajax/carreras/server_processing_carreras.php [L,QSA]
+# Obtener alumnos por carrera (Modal)
+RewriteRule ^carreras/get_alumnos$ ajax/carreras/get_alumnos_por_carrera.php [L,QSA]
+# Imprimir listado de alumnos por carrera (UUID)
+RewriteRule ^carreras/imprimir/([a-z0-9-]+)$ ajax/carreras/imprimir_lista_carrera.php?uuid=$1 [L,QSA]
+
+# GESTIÓN DE ESPACIOS CURRICULARES (Materias)
+RewriteRule ^institucion/carrera/([a-z0-9-]+)/materias$ modules/carreras/materias_lista.php?uuid=$1 [L,QSA]
+
+# --- MÓDULO TESORERÍA ---
+RewriteRule ^tesoreria/configuracion$ modules/tesoreria/configuracion_tesoreria.php [L,QSA]
+# Conceptos de Cobro
+RewriteRule ^tesoreria/conceptos$ modules/tesoreria/conceptos_pago.php [L,QSA]
+# --- HISTORIAL Y ANULACIONES ---
+RewriteRule ^tesoreria/historial$ modules/tesoreria/historial_pagos.php [L,QSA]
+RewriteRule ^tesoreria/fetch_historial$ ajax/tesoreria/fetch_historial.php [L,QSA]
+RewriteRule ^tesoreria/anular$ ajax/tesoreria/anular_factura.php [L,QSA]
+RewriteRule ^tesoreria/bonos$ modules/tesoreria/bonos_extraordinarios.php [L,QSA]
+# Regla para imprimir recibos (acepta solo UUID o UUID/reimpresion)
+# Regla para imprimir recibo general (Punto de Venta e Historial)
+RewriteRule ^tesoreria/imprimir/([a-zA-Z0-9-]+)$ modules/tesoreria/imprimir_recibo_alumno.php?uuid=$1 [L,QSA]
+# URL para imprimir: dominio.com/imprimir-recibo/UUID_AQUÍ
+# Regla optimizada para tokens encriptados y UUIDs
+#RewriteRule ^tesoreria/imprimir-recibo/([^/]+)/([^/]+)$ modules/tesoreria/imprimir_recibo.php?uuid=$1&formato=$2 [L,QSA]
+RewriteRule ^tesoreria/imprimir-recibo/([^/]+)$ modules/tesoreria/imprimir_recibo.php?uuid=$1 [L,QSA]
+# Módulo de Morosidad
+RewriteRule ^tesoreria/mora$ modules/tesoreria/alumnos_mora.php [L,QSA]
+RewriteRule ^tesoreria/ajax_mora$ ajax/tesoreria/ajax_mora.php [L,QSA]
+
+# Ruta para entrar al punto de venta por UUID de alumno
+RewriteRule ^tesoreria/cobrar/([a-z0-9-]+)$ modules/tesoreria/punto_venta.php?uuid=$1 [L,QSA]
+# Para el manejo de éxito y selección de carrera
+RewriteRule ^tesoreria/cobrar/([a-z0-9-]+)/([0-9]+)$ modules/tesoreria/punto_venta.php?uuid=$1&id_carrera=$2 [L,QSA]
+RewriteRule ^alumnos/ficha-financiera/([a-z0-9-]+)$ modules/alumnos/ficha_financiera.php?uuid=$1 [L,QSA]
+# Ruta amigable para imprimir recibos por UUID
+RewriteRule ^tesoreria/imprimir/([a-z0-9-]+)$ modules/tesoreria/imprimir_recibo.php?uuid=$1 [L,QSA]
+# Validación pública de recibos vía QR
+RewriteRule ^validar/([a-z0-9-]+)$ modules/tesoreria/validar_comprobante.php?uuid=$1 [L,QSA]
+# Imprimir comprobante de deuda
+RewriteRule ^tesoreria/deuda/([a-z0-9-]+)$ modules/tesoreria/imprimir_deuda.php?uuid=$1 [L,QSA]
+# Ruta para la Ficha Financiera en PDF (usando UUID)
+RewriteRule ^tesoreria/ficha-pdf/([a-z0-9-]+)$ modules/alumnos/ficha_financiera_pdf.php?uuid=$1 [L,QSA]
+# Ruta amigable para el procesamiento del ServerSide de DataTables
+RewriteRule ^tesoreria/obtener_bonos$ ajax/tesoreria/obtener_bonos_serverside.php [L,QSA]
+RewriteRule ^tesoreria/guardar_bono$ ajax/tesoreria/guardar_bono.php [L,QSA]
+RewriteRule ^tesoreria/anular_bono$ ajax/tesoreria/anular_bono.php [L,QSA]
+
+# 1. Panel Principal (Este queda igual porque está en modules)
+RewriteRule ^inscripciones/gestionar$ modules/inscripciones/inscripciones.php [L,QSA]
+
+# 2. Procesamiento de Alumnos (Datatables)
+RewriteRule ^inscripciones/data-alumnos$ ajax/inscripciones/server_processing_alumnos.php [L,QSA]
+
+# 3. Verificación de Deuda (Tesorería)
+RewriteRule ^inscripciones/verificar-estado/([a-z0-9-]+)$ ajax/inscripciones/ajax_check_deuda.php?uuid=$1 [L,QSA]
+
+# 4. Carga de Carreras (Nueva regla amigable)
+RewriteRule ^inscripciones/get-carreras$ ajax/inscripciones/ajax_get_carreras.php [L,QSA]
+
+# 5. Carga de Materias por Carrera
+RewriteRule ^inscripciones/materias-disponibles$ ajax/inscripciones/get_materias_por_carrera.php [L,QSA]
+
+# 6. Carga de Materias del Alumno (Inscripciones actuales)
+RewriteRule ^inscripciones/materias-alumno/([a-z0-9-]+)$ ajax/inscripciones/get_materias_alumno.php?uuid=$1 [L,QSA]
+
+# 1. Ruta para la interfaz de selección de carga de notas
+RewriteRule ^calificaciones/cargar$ modules/calificaciones/notas_carga.php [L,QSA]
+
+# 2. Ruta para la planilla (el archivo al que apunta el formulario)
+# Ruta amigable para la planilla con UUIDs
+RewriteRule ^calificaciones/planilla/([a-z0-9-]+)/([a-z0-9-]+)$ modules/calificaciones/notas_planilla.php?carrera=$1&espacio=$2 [L,QSA]
+
+# 3. Ruta para el procesamiento AJAX de materias
+RewriteRule ^calificaciones/get-espacios$ ajax/calificaciones/get_espacios_notas.php [L,QSA]
+# Ruta para procesar el POST de las notas
+RewriteRule ^calificaciones/procesar$ modules/calificaciones/procesar_notas.php [L,QSA]
+# Ruta para procesar el guardado masivo de notas de cursada
+RewriteRule ^calificaciones/procesar-cursada$ ajax/calificaciones/procesar_cursada_REGISTRO.php [L,QSA]
+# Ruta para bloquear/desbloquear planillas
+RewriteRule ^calificaciones/control-planilla$ ajax/calificaciones/control_planilla_ACCION.php [L,QSA]
+
+# Ruta para la Apertura de Mesas
+RewriteRule ^instancias/apertura$ modules/instancias/apertura_mesas.php [L,QSA]
+
+# Ruta para el motor AJAX de materias en instancias
+RewriteRule ^instancias/get-materias$ ajax/instancias/get_materias.php [L,QSA]
+
+# 1. La vista principal de gestión
+RewriteRule ^instancias/gestion-inscripciones$ modules/instancias/inscripciones_consulta_abm.php [L,QSA]
+
+# 2. El motor de datos (Server-side)
+RewriteRule ^instancias/inscripciones-data$ ajax/instancias/inscripciones_serverside.php [L,QSA]
+
+# 3. El procesador de acciones (Eliminar)
+RewriteRule ^instancias/acciones-inscripcion$ ajax/instancias/inscripciones_actions_handler.php [L,QSA]
+
+# Ruta para el Historial de Mesas
+RewriteRule ^instancias/historial$ modules/instancias/historial_mesas.php [L,QSA]
+
+# Ruta para el motor de datos del historial (Server-side)
+RewriteRule ^instancias/historial-data$ ajax/instancias/historial_mesas_server.php [L,QSA]
+
+# Ruta para el motor de materias del historial
+RewriteRule ^instancias/get-materias-historial$ ajax/instancias/get_materias_mesas.php [L,QSA]
+
+# Ruta para la Carga de Notas por Lote usando UUID
+RewriteRule ^instancias/calificaciones-lote/([a-zA-Z0-9-]+)$ modules/instancias/calificaciones_lote.php?uuid_mesa=$1 [L,QSA]
+
+# Ruta para el procesador AJAX de las notas
+RewriteRule ^instancias/guardar-lote-examen$ ajax/instancias/ajax_calificaciones_lote.php [L,QSA]
+# Ruta para generar el Acta en PDF usando UUID
+RewriteRule ^instancias/generar-acta/([a-zA-Z0-9-]+)$ ajax/instancias/generar_acta_pdf.php?uuid_mesa=$1 [L,QSA]
+# Ruta para la Inscripción Rápida
+RewriteRule ^instancias/inscripcion-rapida$ modules/instancias/inscripcion_examen_rapida_CONTROL.php [L,QSA]
+
+RewriteRule ^instancias/acciones-inscripcion$ modules/instancias/acciones_inscripcion_CONTROL.php [L,QSA]
+
+# 2. Regla para los datos de la tabla (DataTable)
+RewriteRule ^instancias/inscripciones-data$ modules/instancias/inscripciones_data_CONTROL.php [L,QSA]
+
+# 3. Regla para las notas por lote (con ID de mesa)
+RewriteRule ^instancias/calificaciones-lote/([0-9]+)$ modules/instancias/calificaciones_lote_VISTA.php?id_mesa=$1 [L,QSA]
+
+RewriteRule ^tesoreria/anular-h$ modules/tesoreria/anular_factura_CONTROL.php [L]
+
+# Ruta para carga de notas usando UUID (Seguridad reforzada)
+RewriteRule ^instancias/calificaciones-lote/([a-z0-9-]+)$ modules/instancias/calificaciones_lote_VISTA.php?uuid_mesa=$1 [L,QSA]
+
+
+# URL para Nueva Calificación: dominio.com/calificaciones/nuevo
+#RewriteRule ^calificaciones/nuevo$ modules/calificaciones/calificaciones_abm.php [L,QSA]
+
+# Editar Calificación usando UUID: /calificaciones/editar/550e8400-e29b-41d4-a716-446655440000
+#RewriteRule ^calificaciones/editar/([a-zA-O0-9-]+)$ modules/calificaciones/calificaciones_abm.php?action=edit&uuid=$1 [L,QSA]
+
+# URL para Lista de Calificaciones (si tuvieras una): dominio.com/calificaciones/lista
+#RewriteRule ^calificaciones/lista$ modules/calificaciones/calificaciones_gestion.php [L,QSA]
+
+# Reporte General / Gestión
+RewriteRule ^gestion-academica/reporte$ modules/calificaciones/reporte_gestion.php [L,QSA]
+
+# Acciones específicas vía AJAX (Seguridad con UUID si decides agregarlo a la tabla)
+RewriteRule ^gestion-academica/api$ ajax/calificaciones/ajax_reporte.php [L,QSA]
+
+RewriteRule ^reporte/alumno/([a-z0-9-]+)$ modules/calificaciones/reporte_pdf.php?uuid=$1 [L,QSA]
+
+RewriteRule ^reporte/materia/([a-z0-9-]+)$ modules/calificaciones/reporte_materia_pdf.php?uuid=$1 [L,QSA]
+
+RewriteRule ^mesas/calificaciones/([a-z0-9-]+)$ modules/mesas/calificaciones-lote-examenes.php?uuid=$1 [L,QSA]
+
+#RewriteRule ^reporte/mesa/([a-z0-9-]+)$ modules/mesas/reporte_mesa_pdf.php?uuid=$1 [L,QSA]
+RewriteRule ^reporte/mesa/([a-z0-9-]+)$ ajax/mesas/generar_acta_pdf.php?uuid=$1 [L,QSA]
+RewriteRule ^reporte/acta-final/([a-z0-9-]+)$ ajax/mesas/reporte_mesa_final_pdf.php?uuid=$1 [L,QSA]
+
+# --- MÓDULO DE ASISTENCIAS ---
+
+# Pantalla principal de selección
+RewriteRule ^gestion-asistencias/inicio$ modules/asistencias/asistencia_inicio.php [L,QSA]
+# Ruta amigable para obtener espacios por carrera (AJAX)
+RewriteRule ^api/asistencias/get-espacios$ ajax/asistencias/get_espacios_asistencia.php [L,QSA]
+
+# Planilla de carga diaria (Recibe UUID del espacio y la Fecha)
+# Ejemplo: /asistencias/planilla/550e8400-e29b-41d4/2026-03-26
+RewriteRule ^asistencias-gestion/planilla/([a-z0-9-]+)/([0-9-]+)$ modules/asistencias/asistencia-planilla.php?uuid_espacio=$1&fecha=$2 [L,QSA]
+
+# Reporte Mensual de Asistencias: /asistencias/reporte-mensual/UUID_CARRERA/UUID_ESPACIO/MES/ANIO
+
+RewriteRule ^asistencias/reporte-mensual/([a-z0-9-]+)/([a-z0-9-]+)/([0-9]+)/([0-9]+)/?$ modules/asistencias/asistencia_sabana.php?uuid_carrera=$1&uuid_espacio=$2&mes=$3&anio=$4 [L,QSA]
+
+# Ruta para la interfaz del reporte
+RewriteRule ^reporte/permanencia$ modules/asistencias/reporte_permanencia.php [L,QSA]
+
+# Ruta para el motor de datos (AJAX)
+RewriteRule ^api/asistencias/data-permanencia$ ajax/asistencias/server_processing_permanencia.php [L,QSA]
+
+# Ruta para generar el PDF con FPDF
+RewriteRule ^reporte/permanencia-pdf$ ajax/asistencias/generar_reporte_pdf.php [L,QSA]
+
+# 1. VISTAS (Interfaces Gráficas)
+# ---------------------------------------------------------
+
+RewriteRule ^tesoreria/finanzas$ modules/tesoreria/dashboard_finanzas.php [L,QSA]
+
+# Interfaz para generar la liquidación (donde ves los profesores/staff)
+RewriteRule ^tesoreria/liquidar-masivo$ modules/tesoreria/liquidacion_masiva_interfaz.php [L,QSA]
+
+RewriteRule ^tesoreria/lotes-pendientes$ modules/tesoreria/lotes_liquidaciones_listado.php [L,QSA]
+RewriteRule ^tesoreria/obtener-detalle-lote$ ajax/tesoreria/obtener_detalle_lote.php [L,QSA]
+RewriteRule ^tesoreria/finalizar-lote$ ajax/tesoreria/finalizar_lote.php [L,QSA]
+RewriteRule ^tesoreria/obtener-listado-lotes$ ajax/tesoreria/obtener_listado_lotes.php [L,QSA]
+
+
+# 2. ENDPOINTS AJAX (Motores de Datos)
+# ---------------------------------------------------------
+# Trae los agentes pendientes de cobro para la tabla principal
+RewriteRule ^tesoreria/obtener-pendientes$ ajax/tesoreria/obtener_pendientes_liquidacion.php [L,QSA]
+
+# Procesa la inserción masiva en la base de datos (crea el lote)
+RewriteRule ^tesoreria/procesar-liquidacion-masiva$ ajax/tesoreria/procesar_liquidacion_masiva.php [L,QSA]
+
+# Trae los lotes para el listado de gestión
+RewriteRule ^tesoreria/obtener-lotes$ ajax/tesoreria/obtener_lotes_liquidaciones.php [L,QSA]
+
+# Autoriza (Cierra) o Anula un lote con contraseña de Admin
+RewriteRule ^tesoreria/ejecutar-accion-lote$ ajax/tesoreria/ejecutar_accion_lote.php [L,QSA]
+
+# Verifica permiso especial de tesorería (cambio de fechas/periodos)
+RewriteRule ^tesoreria/autorizar-periodo$ ajax/tesoreria/verificar_permiso_tesoreria.php [L,QSA]
+# Descarga de archivo bancario (Ej: tesoreria/descargar-txt/45)
+RewriteRule ^tesoreria/descargar-txt/([0-9]+)$ ajax/tesoreria/descargar_archivo_banco.php?id_lote=$1 [L,QSA]
+
+RewriteRule ^tesoreria/configurar-layouts$ modules/tesoreria/configurar_layouts.php [L]
+# Ruta para guardar la configuración del banco
+RewriteRule ^tesoreria/guardar-layout-banco$ modules/tesoreria/guardar_layout_banco.php [L]
+
+RewriteRule ^tesoreria/obtener-detalle-layout$ ajax/tesoreria/obtener_detalle_layout.php [L]
+
+RewriteRule ^tesoreria/eliminar-banco$ ajax/tesoreria/eliminar_banco.php [L]
+# Regla para descarga amigable de TXT de lotes
+RewriteRule ^tesoreria/descargar-txt/([0-9]+)$ ajax/tesoreria/descarga_directa_txt.php?id=$1 [L,QSA]
+
+# Regla para informar rechazo bancario
+RewriteRule ^tesoreria/rechazar-lote-banco$ ajax/tesoreria/rechazar_lote_banco.php [L]
+
+# Liquidación Individual con Token
+RewriteRule ^tesoreria/liquidar/([^/]+)$ modules/tesoreria/liquidar_haberes.php?token=$1 [L,QSA]
+# Regla para imprimir recibo encriptado
+# Ejemplo: tesoreria/imprimir-recibo/TOKEN_GIGANTE/A4
+RewriteRule ^tesoreria/imprimir-recibo/([^/]+)/([^/]+)$ modules/tesoreria/imprimir_recibo_haber.php?id=$1&f=$2 [L,QSA]
+
+# ----------------------------------------------------------------      
+# MÓDULO DE GESTIÓN DE GASTOS Y EGRESOS
+# ----------------------------------------------------------------
+
+# Interfaz Principal de Gastos
+RewriteRule ^tesoreria/gastos$ modules/tesoreria/gestion_gastos.php [L,QSA]
+
+# Obtener categorías para los selectores (AJAX)
+RewriteRule ^tesoreria/obtener-categorias-gastos$ ajax/tesoreria/obtener_categorias_gastos.php [L,QSA]
+
+# Guardar nueva categoría de gasto (AJAX)
+RewriteRule ^tesoreria/guardar-categoria-gasto$ ajax/tesoreria/guardar_categoria_gasto.php [L,QSA]
+
+# Servidor de Tabla de Gastos (Server-side DataTables)
+RewriteRule ^tesoreria/ajax-server-gastos$ ajax/tesoreria/ajax_server_gastos.php [L,QSA]
+
+# Procesar nuevo gasto manual (POST)
+RewriteRule ^tesoreria/procesar-gasto$ ajax/tesoreria/procesar_gasto.php [L,QSA]
+
+# Anular un gasto registrado (AJAX)
+RewriteRule ^tesoreria/anular-gasto$ ajax/tesoreria/anular_gasto.php [L,QSA]
+
+
+
+# --- REGLA GENERAL PARA PHP (la que ya tenías) ---
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+# 7. Evitar el acceso al propio .htaccess
+<Files .htaccess>
+    Require all denied
+</Files>
