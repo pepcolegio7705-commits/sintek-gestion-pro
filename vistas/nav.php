@@ -1,16 +1,22 @@
 <style>
-    /* Sidebar Principal */
+    :root {
+        --azul-institucional: #003366;
+        --azul-claro: #00509e;
+        --gris-fondo: #f4f7f6;
+    }
+    /* Sidebar Principal Premium */
     .sidebar {
-        width: 250px;
+        width: 260px;
         height: 100vh;
         position: fixed;
         top: 0;
         left: 0;
-        background: #001a33; 
+        background: linear-gradient(180deg, var(--azul-institucional) 0%, #001224 100%);
         display: flex;
         flex-direction: column;
         z-index: 1050;
         overflow-y: auto;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.15);
     }
 
     .sidebar-header {
@@ -21,20 +27,25 @@
 
     /* Estilo del Acordeón en el Sidebar */
     .sidebar .accordion { background: transparent; }
-    .sidebar .accordion-item { background: transparent; border: none; }
+    .sidebar .accordion-item { background: transparent; border: none; margin-bottom: 5px; }
 
     .sidebar .accordion-button {
         background: transparent;
-        color: #cbd5e0;
-        font-size: 0.9rem;
-        padding: 15px 20px;
+        color: #e2e8f0;
+        font-size: 0.95rem;
+        padding: 16px 22px;
         box-shadow: none;
-        font-weight: 500;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        margin: 0 10px;
+        width: auto;
     }
 
     .sidebar .accordion-button:not(.collapsed) {
-        color: #63b3ed;
-        background: rgba(255,255,255,0.05);
+        color: #ffffff;
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .sidebar .accordion-button::after {

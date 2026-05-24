@@ -62,22 +62,66 @@ $stats_egresados = $pdo->query($sql_egresados)->fetchAll();
     <script src="<?= BASE_URL ?>assets/js/chart.js"></script>
 
     <style>
-        :root { --azul-institucional: #003366; --bg-gris: #f4f7f6; }
-        body { background-color: var(--bg-gris); font-family: 'Segoe UI', Tahoma, sans-serif; }
+        :root { 
+            --azul-institucional: #003366; 
+            --azul-claro: #00509e;
+            --bg-gris: #f4f7f6; 
+        }
+        body { 
+            background-color: var(--bg-gris); 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+        }
+        /* Glassmorphism en Header Institucional */
         .info-institucional { 
             background: linear-gradient(135deg, var(--azul-institucional) 0%, #001a33 100%); 
-            color: white; border-radius: 15px; padding: 30px; margin-bottom: 25px;
+            color: white; 
+            border-radius: 15px; 
+            padding: 30px; 
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 51, 102, 0.2);
+            position: relative;
+            overflow: hidden;
         }
-        .stat-card { border: none; border-radius: 12px; transition: all 0.3s ease; border-left: 5px solid transparent; }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .icon-shape { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 20px; }
+        .info-institucional::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        /* Tarjetas con sombras suaves (Premium UI) */
+        .stat-card { 
+            border: none; 
+            border-radius: 15px; 
+            transition: all 0.3s ease; 
+            border-left: 5px solid transparent; 
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .stat-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+        }
+        .icon-shape { 
+            width: 55px; height: 55px; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 15px; font-size: 24px; 
+        }
         .border-primary-accent { border-left-color: #0d6efd; }
         .border-success-accent { border-left-color: #198754; }
         .border-info-accent { border-left-color: #0dcaf0; }
-        .card-header { background-color: transparent !important; border-bottom: 1px solid rgba(0,0,0,0.05); font-weight: 700; color: var(--azul-institucional); }
-        .subtitulo-explicativo { color: #8898aa; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
-
-       
+        .card-header { 
+            background-color: transparent !important; 
+            border-bottom: 1px solid rgba(0,0,0,0.05); 
+            font-weight: 700; 
+            color: var(--azul-institucional); 
+            padding-top: 1.5rem;
+            padding-bottom: 1rem;
+        }
+        .subtitulo-explicativo { color: #8898aa; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
     </style>
 </head>
 <body>

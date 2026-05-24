@@ -19,9 +19,29 @@ $meses = [1=>"Enero",2=>"Febrero",3=>"Marzo",4=>"Abril",5=>"Mayo",6=>"Junio",7=>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root { --azul: #003366; }
-        body { background-color: #f8f9fa; }
-        .student-card { background: white; border-radius: 12px; border-left: 6px solid var(--azul); }
+        :root { 
+            --azul-institucional: #003366; 
+            --azul-claro: #00509e;
+            --bg-gris: #f4f7f6; 
+        }
+        body { background-color: var(--bg-gris); font-family: 'Segoe UI', Tahoma, sans-serif; }
+        
+        /* Estilos Premium UI */
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
         .mes-pill { width: 42px; text-align: center; font-size: 0.75rem; padding: 4px 0; border-radius: 4px; border: 1px solid #ddd; }
         .bg-pagado { background-color: #198754 !important; color: white !important; border-color: #198754 !important; }
     </style>
@@ -29,10 +49,15 @@ $meses = [1=>"Enero",2=>"Febrero",3=>"Marzo",4=>"Abril",5=>"Mayo",6=>"Junio",7=>
 <body class="bg-light">
 
 <?php include '../../vistas/nav.php'; ?>
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h4"><i class="fas fa-vault me-2 text-primary"></i> Control de Lotes de Liquidación</h2>
-        <span class="badge bg-white text-dark shadow-sm p-2">Usuario: <?= $_SESSION['nombre_usuario'] ?></span>
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 p-4 rounded-4" style="background: linear-gradient(135deg, var(--azul-institucional) 0%, #001a33 100%); color: white; box-shadow: 0 10px 30px rgba(0, 51, 102, 0.2);">
+        <div>
+            <h2 class="h4 mb-1 fw-bold"><i class="fas fa-wallet me-2 text-info"></i> Panel de Tesorería</h2>
+            <small class="text-info opacity-75">Control de Lotes y Liquidaciones</small>
+        </div>
+        <span class="badge bg-white text-dark shadow-sm p-2 rounded-pill px-3">
+            <i class="fas fa-user-circle me-1 text-primary"></i> <?= $_SESSION['nombre_usuario'] ?>
+        </span>
     </div>
 
     <div class="card shadow-sm border-0">

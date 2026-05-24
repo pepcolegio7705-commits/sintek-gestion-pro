@@ -16,6 +16,8 @@ Esta directiva sirve como plantilla base y **Fuente de la Verdad** para mí (Tu 
 1. **Consultar/Crear:** Leer esta directiva ANTES de codificar.
 2. **Ejecutar:** Programar el código basándome *estrictamente* en esta lógica.
 3. **Observar y Aprender:** Actualizar la sección de "Restricciones" si ocurre algún fallo.
+4. **Control de Versiones (Nuevo):** Al finalizar cualquier ciclo de modificación exitosa, DEBO preguntarte o indicarte si deseas hacer un commit/push para actualizar el repositorio del proyecto actual.
+5. **Política de Rollback (CRÍTICO):** Siempre que se realicen cambios bruscos en el sistema, SE DEBE volver a un estado anterior (rollback) si el código se rompe o deja de funcionar. Para garantizar esto, se debe crear un punto de restauración (Commit) *antes* de iniciar la refactorización masiva.
 
 ---
 
