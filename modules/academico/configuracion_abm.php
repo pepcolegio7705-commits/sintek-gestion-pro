@@ -132,6 +132,6 @@
         </div>
     </div>
     <?php include '../../vistas/footer.php'; ?>
-    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= BASE_URL ?>assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
