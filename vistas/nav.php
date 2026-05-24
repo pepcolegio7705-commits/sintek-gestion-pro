@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= BASE_URL ?>assets/css/premium_sintek.css">
 <style>
     :root {
         --azul-institucional: #003366;

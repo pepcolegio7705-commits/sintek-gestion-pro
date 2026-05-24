@@ -1,0 +1,84 @@
+/* ========================================================
+   Sintek Gestión Pro - Premium UI Global Styles
+   ======================================================== */
+
+:root { 
+    --azul-institucional: #003366; 
+    --azul-claro: #00509e;
+    --bg-gris: #f4f7f6; 
+}
+
+/* Base Override */
+body { 
+    background-color: var(--bg-gris) !important; 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+}
+
+/* Premium Cards */
+.card-premium, .card { 
+    border: none !important; 
+    border-radius: 15px !important; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05) !important;
+    transition: all 0.3s ease !important;
+    background: white !important;
+}
+.card-premium:hover, .card:hover { 
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; 
+}
+
+/* Premium Headers (Glassmorphism) */
+.header-sintek, .card-header { 
+    background: linear-gradient(135deg, var(--azul-institucional) 0%, #001a33 100%) !important; 
+    color: white !important; 
+    border-radius: 15px 15px 0 0 !important; 
+    padding: 20px 25px !important;
+    box-shadow: 0 5px 15px rgba(0, 51, 102, 0.2) !important;
+    border-bottom: none !important;
+}
+.header-sintek h1, .header-sintek h2, .header-sintek h3, .header-sintek h4, .header-sintek h5, .header-sintek h6,
+.card-header h1, .card-header h2, .card-header h3, .card-header h4, .card-header h5, .card-header h6 {
+    color: white !important;
+    margin: 0;
+}
+
+/* Premium Buttons */
+.btn-sintek, .btn-primary { 
+    background-color: var(--azul-institucional) !important; 
+    color: white !important; 
+    border: none !important; 
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    border-radius: 8px !important;
+}
+.btn-sintek:hover, .btn-primary:hover { 
+    background-color: var(--azul-claro) !important; 
+    color: white !important; 
+    transform: translateY(-2px) !important; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; 
+}
+
+/* Formularios y Selects */
+.form-select, .form-control { 
+    border-radius: 8px !important; 
+    border: 1px solid #ced4da !important;
+    padding: 10px 15px !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.02) !important;
+}
+.form-select:focus, .form-control:focus {
+    border-color: var(--azul-claro) !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 51, 102, 0.25) !important;
+}
+
+/* Tablas */
+.table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    background: white;
+}
+.table thead th {
+    background-color: #f8f9fa !important;
+    color: var(--azul-institucional) !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #e9ecef !important;
+}

@@ -39,13 +39,27 @@ try {
     <link href="<?= BASE_URL ?>assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f4f7f6; }
-        .card { border-radius: 15px; border: none; }
+        :root { 
+            --azul-institucional: #003366; 
+            --azul-claro: #00509e;
+            --bg-gris: #f4f7f6; 
+        }
+        body { background-color: var(--bg-gris); font-family: 'Segoe UI', Tahoma, sans-serif; }
+        .card { 
+            border-radius: 15px; 
+            border: none; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .card:hover { box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .header-gradient { 
-            background: linear-gradient(45deg, #003366, #0052a3); 
+            background: linear-gradient(135deg, var(--azul-institucional) 0%, #001a33 100%); 
             color: white; 
             border-radius: 15px 15px 0 0 !important;
+            box-shadow: 0 5px 15px rgba(0, 51, 102, 0.2);
         }
+        .form-select { border-radius: 10px; padding: 12px; }
+        .btn-success { border-radius: 10px; font-weight: 600; padding: 12px 25px; }
     </style>
 </head>
 <body>

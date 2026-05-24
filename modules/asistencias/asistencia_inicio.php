@@ -43,24 +43,36 @@ try {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { background-color: #f4f7f6; }
-        .card { border: none; border-radius: 15px; }
-        /* Estilo Sintek: Degradado oscuro */
+        :root { 
+            --azul-institucional: #003366; 
+            --azul-claro: #00509e;
+            --bg-gris: #f4f7f6; 
+        }
+        body { background-color: var(--bg-gris); font-family: 'Segoe UI', Tahoma, sans-serif; }
+        .card { 
+            border: none; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .card:hover { box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        /* Estilo Sintek Premium */
         .header-sintek { 
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%); 
+            background: linear-gradient(135deg, var(--azul-institucional) 0%, #001a33 100%); 
             color: white; 
             border-radius: 15px 15px 0 0; 
             padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 51, 102, 0.2);
         }
         .form-label { font-weight: 600; color: #334155; font-size: 0.9rem; }
         .btn-sintek { 
-            background-color: #0dcaf0; 
+            background-color: var(--azul-institucional); 
             color: white; 
             border: none; 
             font-weight: bold;
             transition: all 0.3s;
         }
-        .btn-sintek:hover { background-color: #0baccc; color: white; transform: translateY(-2px); }
+        .btn-sintek:hover { background-color: var(--azul-claro); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
