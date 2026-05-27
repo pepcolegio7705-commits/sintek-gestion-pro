@@ -41,3 +41,26 @@
         header("Location: " . BASE_URL . "login"); 
         exit;
     }
+
+    /**
+     * Genera un token CSRF y lo guarda en la sesión.
+     * @return string El token generado.
+     */
+    function generar_token_csrf() {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+
+    /**
+     * Verifica si el token CSRF recibido coincide con el de la sesión.
+     * @param string $token_recibido El token enviado desde el formulario.
+     * @return bool True si es válido, False en caso contrario.
+     */
+    function verificar_token_csrf($token_recibido) {
+        if (isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token_recibido)) {
+            return true;
+        }
+        return false;
+    }

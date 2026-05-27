@@ -15,6 +15,13 @@ $roles_disponibles = $pdo->query($sql_roles)->fetchAll(PDO::FETCH_ASSOC);
 
 // --- LÓGICA CRUD --- (Sin cambios en tu lógica original)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Validar token CSRF
+    if (!isset($_POST['csrf_token']) || !verificar_token_csrf($_POST['csrf_token'])) {
+        registrar_log_seguridad($pdo, 'CSRF_DETECTADO', 'Intento de POST sin token válido en usuarios_abm');
+        header('Location: ' . BASE_URL . 'dashboard?error=csrf');
+        exit;
+    }
+
     $id_usuario = isset($_POST['id_usuario']) ? (int)$_POST['id_usuario'] : 0;
     $nombre_usuario = trim($_POST['nombre_usuario']);
     $password_form = $_POST['password']; 
@@ -137,6 +144,7 @@ function confirmarEliminacion(id, nombre) {
                     </div>
                     <div class="card-body">
                         <form method="POST" action="usuarios_abm.php">
+                            <input type="hidden" name="csrf_token" value="<?php echo generar_token_csrf(); ?>">
                             <input type="hidden" name="id_usuario" value="<?php echo $usuario_editar ? $usuario_editar['id_usuario'] : 0; ?>">
                             
                             <div class="mb-3">

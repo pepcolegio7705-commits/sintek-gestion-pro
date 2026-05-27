@@ -144,3 +144,17 @@ function desencriptar_url($data) {
     list($encrypted_data, $iv) = explode('::', $data, 2);
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', URL_KEY, 0, $iv);
 }
+
+// --- 6. SANITIZACIÓN ---
+
+/**
+ * Escapa HTML de manera centralizada para evitar ataques XSS
+ * @param string|null $string La cadena a escapar
+ * @return string La cadena escapada
+ */
+function escape_html($string) {
+    if (is_null($string)) {
+        return '';
+    }
+    return htmlspecialchars(trim($string), ENT_QUOTES, 'UTF-8');
+}

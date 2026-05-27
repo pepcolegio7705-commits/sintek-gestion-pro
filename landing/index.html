@@ -195,22 +195,113 @@
         </div>
     </section>
 
-    <!-- CTA Final -->
-    <section class="cta-section">
+    <!-- Contacto -->
+    <section id="contacto" class="module-section bg-white">
         <div class="container">
-            <h2 class="mb-4">¿Listo para llevar tu institución al próximo nivel?</h2>
-            <p class="lead mb-4">Adquiere Sintek Gestión Pro hoy mismo y automatiza tu administración educativa.</p>
-            <a href="#" class="btn btn-custom btn-lg">Contáctanos para Comprar</a>
+            <div class="row">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h2 class="module-title">Ponte en contacto</h2>
+                    <p class="lead mb-4">¿Interesado en implementar Sintek Gestión Pro en tu institución? Escríbenos y te responderemos a la brevedad.</p>
+                    
+                    <ul class="list-unstyled mb-5">
+                        <li class="mb-3">
+                            <i class="fas fa-envelope text-primary me-3 fs-5"></i>
+                            <a href="mailto:sintekgestion@gmail.com" class="text-decoration-none text-dark fs-5">sintekgestion@gmail.com</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fab fa-youtube text-danger me-3 fs-5"></i>
+                            <a href="https://www.youtube.com/@sintek-gestion" target="_blank" class="text-decoration-none text-dark fs-5">youtube.com/@sintek-gestion</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-phone-alt text-success me-3 fs-5"></i>
+                            <span class="fs-5">0280-154847619</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card shadow-lg border-0" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <form action="procesar_contacto.php" method="POST">
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label fw-bold">Nombre Completo</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" required placeholder="Tu nombre">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label fw-bold">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="email" name="email" required placeholder="tucorreo@ejemplo.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="institucion" class="form-label fw-bold">Institución Educativa</label>
+                                    <input type="text" class="form-control" id="institucion" name="institucion" placeholder="Nombre de tu colegio / instituto">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="mensaje" class="form-label fw-bold">Mensaje</label>
+                                    <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required placeholder="¿En qué podemos ayudarte?"></textarea>
+                                </div>
+                                
+                                <!-- Widget reCAPTCHA -->
+                                <div class="mb-4 d-flex justify-content-center">
+                                    <div class="g-recaptcha" data-sitekey="TU_CLAVE_DE_SITIO_AQUI"></div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-custom w-100 shadow">Enviar Mensaje <i class="fas fa-paper-plane ms-2"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer class="bg-dark text-white text-center py-4">
+    <footer class="text-center py-4" style="background: linear-gradient(135deg, var(--azul-institucional) 0%, #001a33 100%); color: white;">
         <div class="container">
             <p class="mb-0">&copy; <script>document.write(new Date().getFullYear())</script> Sintek Gestión Pro. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap Bundle with Popper (Opcional para interactividad local si existe) -->
+    <!-- Google reCAPTCHA v2 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <!-- Bootstrap Bundle with Popper -->
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            
+            if (status === 'success' || status === 'success_local') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Mensaje Enviado!',
+                    text: 'Nos pondremos en contacto contigo a la brevedad.',
+                    confirmButtonColor: '#003366'
+                }).then(() => {
+                    // Limpiar la URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            } else if (status === 'error') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hubo un problema',
+                    text: 'No pudimos enviar tu mensaje. Por favor intenta de nuevo o escríbenos directamente a sintekgestion@gmail.com',
+                    confirmButtonColor: '#003366'
+                }).then(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            } else if (status === 'captcha_error') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Verificación fallida',
+                    text: 'Por favor, completa el desafío de seguridad reCAPTCHA para demostrar que no eres un robot.',
+                    confirmButtonColor: '#003366'
+                }).then(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

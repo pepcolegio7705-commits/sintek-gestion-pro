@@ -30,4 +30,6 @@ Esta directiva sirve como plantilla base y **Fuente de la Verdad** para mí (Tu 
 ## Restricciones / Casos Borde (Memoria Viva)
 > *Nota: Todo aprendizaje nuevo tras un error se documenta aquí.*
 - **Entorno BD:** Evitar cargar .env con scripts de terceros pesados, usar el esquema actual de `parse_ini_file` o nativos ligeros.
-- **Seguridad en Uploads:** Toda carpeta de subida debe estar protegida para evitar ejecución de scripts.
+- **Seguridad en Uploads (RCE):** Toda carpeta de subida debe estar protegida en su `.htaccess` con `FilesMatch` para denegar la ejecución de scripts (`.php`, `.phtml`, etc.).
+- **Vulnerabilidades CSRF:** Todo formulario que envíe peticiones POST debe incluir un token CSRF (`generar_token_csrf()`) que será validado en el backend (`verificar_token_csrf()`) antes de cualquier transacción a BD.
+- **Vulnerabilidades XSS:** Todo dato renderizado en vistas (HTML) que provenga de la base de datos o de variables inyectables debe escaparse utilizando `escape_html()` de forma obligatoria.

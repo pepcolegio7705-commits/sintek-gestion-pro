@@ -36,6 +36,13 @@
 
     // --- 2. LÓGICA CRUD (POST) ---
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Validar token CSRF
+        if (!isset($_POST['csrf_token']) || !verificar_token_csrf($_POST['csrf_token'])) {
+            registrar_log_seguridad($pdo, 'CSRF_DETECTADO', 'Intento de POST sin token válido en alumnos_abm');
+            header('Location: ' . BASE_URL . 'dashboard?error=csrf');
+            exit;
+        }
+
         $id_alumno = (int)($_POST['id_alumno'] ?? 0);
         $dni = trim($_POST['dni']);
         $legajo = trim($_POST['legajo']);
@@ -222,6 +229,7 @@
         </div>
         <div class="card-body">
             <form id="formAlumno" method="POST" action="<?= BASE_URL; ?>alumnos/gestion" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?php echo generar_token_csrf(); ?>">
                 <input type="hidden" name="id_alumno" id="id_alumno" value="<?= $alumno_editar['id_alumno'] ?? 0; ?>">
                 
                 <ul class="nav nav-tabs" id="alumnoTab" role="tablist">
